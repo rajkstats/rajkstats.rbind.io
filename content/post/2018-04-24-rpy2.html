@@ -1,0 +1,161 @@
+---
+title:  'The Python Package, R users need : rpy2'
+author: RAJ KUMAR
+date:  '2018-04-24'
+#lastmod: '2020-04-25'
+slug:  rpy2
+summary: "Using R libraries in Python"
+categories: []
+tags: 
+  - rpy2
+  - R
+  - Python
+banner: 'banners/rpy2_head.jpeg'
+description: 'How to use R libraries in Python'
+images: ['banners/rpy2_head.jpeg']
+menu: ''
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>Recently, I came across a situation where I would have to write a R library
+which is not available in Python. I was working on a machine learning pipeline
+in Python where I had to combine all pre-processing into a one single flow.
+Ofcourse, you are not limited to these libraries. You can always add your own
+functions in Python. However, author of that R package has done a pretty good
+work and in interest of time, I wanted to use it in one of my workflows.</p>
+<p>I was in a situation where I had only few options:</p>
+<ol style="list-style-type: decimal">
+<li>Use R and python scripts separately and merge the results at last all
+together in a different script.</li>
+<li>Implement that library in Python</li>
+<li>Use rpy2</li>
+</ol>
+<p>rpy2 is a python package which allows you to use R functionalities in Python
+environment. Basically, you need to import R libraries using rpy2 functions in
+Python environment. Also, it allows you to convert your R objects to Python
+objects back and forth (for ex: Converting R and Python dataframes back and
+forth ). In this article, I will walk you through implementation of
+stringdist in python which is an awesome package to calculate distance between
+two strings using different methods. Idea of writing this article here is to
+show implementation of stringdist R package in python environment using rpy2.</p>
+<pre class="python"><code>import rpy2
+import rpy2.robjects as robjects
+import rpy2.robjects.packages as rpackages
+from rpy2.robjects.packages import importr
+from pandas import read_csv
+import pandas as pd
+
+# pandas2ri to convert dataframes back and forth in R and
+# python dataframes
+
+# useful: when you want to load a R dataframe and then convert
+# to pandas df or vice-versa
+
+from rpy2.robjects import pandas2ri
+
+# Installing required packages from R in rpy2 to use function
+
+
+# Importing utils from R to install required packages
+utils= importr(&#39;utils&#39;)
+
+
+#You can pass a list of R packages in packnames below
+packnames = (&#39;stringdist&#39;,&#39;base&#39;)
+
+# R vector of strings
+from rpy2.robjects.vectors import StrVector
+
+# Selectively install what needs to be install.
+# We are fancy, just because we can.
+names_to_install = [x for x in packnames
+if not rpackages.isinstalled(x)]
+
+if len(names_to_install) &gt; 0:
+utils.install_packages(StrVector(names_to_install))
+</code></pre>
+<p>Reading a movies dataset with title and ratings and a dataset with corresponding
+messy movie titles to calculate string distance between two titles using
+different methods which I have used in this jupyter notebook.</p>
+<p>Looking at the datasets:</p>
+<pre class="python"><code>movies= read_csv(&#39;/Users/raj/Desktop/stringdist/movies.txt&#39;)</code></pre>
+<div class="figure">
+<img src="https://raw.githubusercontent.com/rajkstats/rajkstats.rbind.io/master/static/post/2018-04-24-rpy2_files/figure-html/img1.png" alt="" />
+<p class="caption">png</p>
+</div>
+<pre class="python"><code>messy_movie_titles= read_csv(&#39;/Users/raj/Desktop/stringdist/
+user_queries.txt&#39;)
+
+# Assingning column name messy_title
+messy_movie_titles.columns = [&#39;messy_title&#39;]
+
+messy_movie_titles.head()</code></pre>
+<div class="figure">
+<img src="https://raw.githubusercontent.com/rajkstats/rajkstats.rbind.io/master/static/post/2018-04-24-rpy2_files/figure-html/img2.png" alt="" />
+<p class="caption">png</p>
+</div>
+<pre class="python"><code>#Combining orginal movie title and
+# messy movie title in one dataframe
+# Since R stringdist expects an input in same way
+
+result=pd.concat([movies[&#39;title&#39;],
+messy_movie_titles[&#39;messy_title&#39;]],
+axis=1,ignore_index=False)
+
+result.columns = [&#39;title&#39;,&#39;messy_title&#39;]
+
+result.head()
+# Calculating distance between strings
+# using stringdist R package with methods
+# Levenshtein ,Cosine And Jaccard Distance
+
+# importing stringdist package in python
+# using importr function
+
+stringdist = importr(&#39;stringdist&#39;)
+
+
+#Lets check type of the result object
+type(result)
+
+pandas.core.frame.DataFrame
+</code></pre>
+<p>Need to convert this Python pandas dataframe to R data frame using pandas2ri to
+pass to stringdist function which expects an R df as input.</p>
+<pre class="python"><code>pandas2ri.activate()
+robjects.globalenv[&#39;result&#39;] = result
+# Calculating Levenshtein distance between the two titles
+ld =stringdist.stringdist(result[&#39;title&#39;],
+result[&#39;messy_title&#39;],
+ method=&#39;lv&#39;)
+
+result[&#39;Levenshtein_distance&#39;] = 0
+result[&#39;Levenshtein_distance&#39;] = ld
+
+
+# Calculating Cosine distance between the two titles
+
+
+cd =stringdist.stringdist(result[&#39;title&#39;],
+result[&#39;messy_title&#39;],
+method=&#39;cosine&#39;,q=2)
+result[&#39;Cosine_distance&#39;] = 0
+result[&#39;Cosine_distance&#39;] = cd
+
+
+# Calculating Jaccard distance between the two titles
+
+jd =stringdist.stringdist(result[&#39;title&#39;],
+result[&#39;messy_title&#39;],
+ method=&#39;jaccard&#39;,q=2)
+result[&#39;Jaccard_distance&#39;] = 0
+result[&#39;Jaccard_distance&#39;] = jd
+
+#Printing final data frame which contains the results from all distances</code></pre>
+<div class="figure">
+<img src="https://raw.githubusercontent.com/rajkstats/rajkstats.rbind.io/master/static/post/2018-04-24-rpy2_files/figure-html/img3.png" alt="" />
+<p class="caption">png</p>
+</div>
+<p><a href="https://www.joyofdata.de/blog/comparison-of-string-distance-algorithms/">Credits: joyofdata</a></p>

@@ -1,0 +1,155 @@
+ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
+
+baseurl = "https://rajkstats.rbind.io/"
+relativeurls = true
+languageCode = "en-us"
+title = "Raj Kumar"
+
+# Enable emoji
+enableEmoji = true
+# Enable comments by entering your Disqus shortname
+disqusShortname = "http-rajkstats-rbind-io"
+
+# Enable Google Analytics by entering your tracking code
+googleAnalytics = "UA-137020608-1"
+# Define the number of posts per page
+# Define the number of posts per page
+paginate = 10
+footnotereturnlinkcontents = "↩"
+footnoteanchorprefix = "°"
+
+theme = "hugo-icarus-theme"
+
+# Comment the themesDir option if you use this theme in production
+#themesDir = "../.."
+
+
+
+[permalinks]
+    post = "/:year/:month/:slug"
+
+
+[params]
+    # Tell me who you are
+    author = "Raj Kumar"
+    bio = "Statistician - Data Scientist"
+    location = "Bengaluru,India"
+    site_description = ""
+    copyright  = "Raj Kumar. Powered by [Hugo](//gohugo.io). Theme by [PPOffice](http://github.com/ppoffice)."
+    avatar = "img/display-pic.jpeg"
+    # Enter your email address to display your Gravatar icon in the profile. If not set the theme
+    # will fallback to the avatar.
+    gravatar = ""
+    logo = "img/logo.png"
+    disable_mathjax = false # set to true to disable MathJax
+    
+    # define which types of pages should be shown. By default the type with the most regular pages
+    mainSections = ["post"]
+    
+    # Format dates with Go's time formatting
+    date_format = "2006-01-02"
+    
+    # Add custom assets with their paths relative to the static folder
+    custom_css = ["css/tomorrow-night-bright.css"]
+    custom_js  = []
+
+# Create custom menu entries by defining a label and a link for
+# them. Since you can also link posts, you've the option the
+# place the links before or after them.
+#
+# E.g.: "Home" appears before all linked posts in the menu
+# and "Tags" / "Categories" after them.
+[[params.menu]]
+    before = true
+    label  = "Home"
+    link   = "/"
+
+
+# Enter a link for the follow button on the left
+[params.profile]
+    follow_button = "https://twitter.com/rajkstats"
+
+
+[social]
+    # Add your social network accounts to the profile section on the left
+    # by entering your username. The links to your account will be
+    # created automatically.
+    github          = "rajkstats"
+    gitlab          = ""
+    bitbucket       = ""
+    jsfiddle        = ""
+    codepen         = ""
+    foursquare      = ""
+    dribbble        = ""
+    deviantart      = ""
+    behance         = ""
+    flickr          = ""
+    instagram       = ""
+    youtube         = ""
+    vimeo           = ""
+    vine            = ""
+    medium          = ""
+    wordpress       = ""
+    tumblr          = ""
+    xing            = ""
+    linkedin        = "rajkstats"
+    slideshare      = ""
+    stackoverflow   = "https://stackoverflow.com/users/7439604/rajk"
+    reddit          = ""
+    pinterest       = ""
+    googleplus      = ""
+    facebook        = ""
+    facebook_admin  = ""
+    twitter_domain  = ""
+    twitter         = "rajkstats"
+
+# options for highlight.js (version, additional languages, and theme)
+    highlightjsVersion = "9.12.0"
+    highlightjsCDN = "//cdn.bootcss.com"
+    highlightjsLang = ["r", "yaml"]
+    highlightjsTheme = "tomorrow-night-bright"
+
+# Enable and disable widgets for the right sidebar
+[params.widgets]
+    recent_articles = false
+    categories = false
+    tags = false
+    tag_cloud = false
+
+# Add algolia
+[outputFormats.Algolia]
+baseName = "algolia"
+isPlainText = true
+mediaType = "application/json"
+notAlternative = true
+
+[params.algolia]
+vars = ["title", "summary", "date", "publishdate", "expirydate", "permalink"]
+params = ["categories", "tags", "description"]
+
+# Add outputs
+[outputs]
+home = ["html", "rss", "Algolia"]
+
+#  enable GDPR settings
+[privacy]
+  [privacy.disqus]
+    disable = false
+  [privacy.googleAnalytics]
+    anonymizeIP = false
+    disable = false
+    respectDoNotTrack = true
+    useSessionStorage = true
+  [privacy.instagram]
+    disable = false
+    simple = false
+  [privacy.twitter]
+    disable = false
+    enableDNT = true
+    simple = false
+  [privacy.vimeo]
+    disable = false
+    simple = false
+  [privacy.youtube]
+    disable = false
+    privacyEnhanced = true
