@@ -14,4 +14,7 @@ images: ['banners/git_discoverer.jpg']
 menu: ''  
 ---
 
-This post was originally posted on [LinkedIn](https://www.linkedin.com/pulse/rshiny-contest-2020-re-work-gitdiscoverercom-raj-kumar/)
+This post was originally posted on 
+[LinkedIn](https://www.linkedin.com/pulse/rshiny-contest-2020-re-work-gitdiscoverercom-raj-kumar/)
+
+Link to web app - [GitDiscoverer](https://rajkstats.shinyapps.io/git_discoverer_app/)
